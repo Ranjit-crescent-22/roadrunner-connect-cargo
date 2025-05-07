@@ -16,6 +16,7 @@ export interface Driver extends User {
   totalKilometers: number;
   languages: string[];
   truckImage?: string;
+  driverPhoto?: string;
 }
 
 export interface Customer extends User {

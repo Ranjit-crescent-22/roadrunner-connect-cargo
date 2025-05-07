@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -6,7 +5,7 @@ import { useRoutes } from "@/context/RouteContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { BadgeCheck, Phone, Mail, TruckIcon, MapPin, Star, Calendar } from "lucide-react";
+import { BadgeCheck, Phone, Mail, TruckIcon, MapPin, Star, Calendar, Image } from "lucide-react";
 import { Driver } from "@/lib/types";
 import RouteCard from "@/components/routes/RouteCard";
 
@@ -63,11 +62,11 @@ const DriverProfile = () => {
       {/* Driver Profile Header */}
       <Card className="mb-8">
         <CardContent className="pt-6">
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+          <div className="flex flex-col md:flex-row gap-6">
             {/* Avatar and basic info */}
             <div className="flex flex-col items-center">
               <Avatar className="h-24 w-24">
-                <AvatarImage src={driver.truckImage} alt={driver.name} />
+                <AvatarImage src={driver.driverPhoto} alt={driver.name} />
                 <AvatarFallback className="text-2xl">{initials}</AvatarFallback>
               </Avatar>
               {driver.verified && (
@@ -135,6 +134,35 @@ const DriverProfile = () => {
               )}
             </div>
           </div>
+          
+          {/* Truck Image Section */}
+          {driver.truckImage && (
+            <div className="mt-6 border border-border rounded-lg overflow-hidden">
+              <div className="bg-muted/30 px-4 py-2 flex items-center">
+                <TruckIcon className="mr-2" size={18} />
+                <span className="font-medium">Driver's Vehicle</span>
+              </div>
+              <div className="aspect-video relative overflow-hidden bg-muted/20">
+                <img 
+                  src={driver.truckImage} 
+                  alt={`${driver.name}'s truck`} 
+                  className="object-cover w-full h-full"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null;
+                    target.src = 'https://placehold.co/600x400?text=No+Truck+Image';
+                  }}
+                />
+              </div>
+            </div>
+          )}
+          
+          {!driver.truckImage && (
+            <div className="mt-6 border border-dashed border-border rounded-lg p-8 text-center text-muted-foreground bg-muted/10">
+              <Image className="mx-auto mb-3" size={32} />
+              <p>No truck image available</p>
+            </div>
+          )}
         </CardContent>
       </Card>
       

@@ -1,6 +1,7 @@
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowRight, TruckIcon, CalendarIcon } from "lucide-react";
 import { Route } from "@/lib/types";
 import { Link } from "react-router-dom";
@@ -15,15 +16,26 @@ const RouteCard = ({ route }: RouteCardProps) => {
   const users = getUsers();
   const driver = users.find(user => user.id === route.driverId);
   
+  const initials = driver?.name
+    .split(" ")
+    .map((n) => n[0])
+    .join("") || "";
+
   return (
     <Card className="card-hover border border-border bg-card mb-4">
       <CardHeader className="pb-2 flex flex-col sm:flex-row justify-between">
-        <div>
-          <div className="flex items-center text-lg font-semibold mb-1">
-            {route.origin} <ArrowRight className="mx-2 text-loadloop-blue" size={18} /> {route.destination}
-          </div>
-          <div className="text-sm text-muted-foreground">
-            Driver: {driver?.name || "Unknown"}
+        <div className="flex items-center">
+          <Avatar className="h-10 w-10 mr-4">
+            <AvatarImage src={(driver as any)?.driverPhoto} alt={driver?.name} />
+            <AvatarFallback>{initials}</AvatarFallback>
+          </Avatar>
+          <div>
+            <div className="flex items-center text-lg font-semibold mb-1">
+              {route.origin} <ArrowRight className="mx-2 text-loadloop-blue" size={18} /> {route.destination}
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Driver: {driver?.name || "Unknown"}
+            </div>
           </div>
         </div>
         <div className="flex items-center text-sm text-muted-foreground mt-2 sm:mt-0">

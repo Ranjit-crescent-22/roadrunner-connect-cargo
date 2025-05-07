@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -8,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { TruckIcon, CalendarIcon } from "lucide-react";
+import { TruckIcon, CalendarIcon, ImageIcon } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const PostRoute = () => {
   const { currentUser, isAuthenticated } = useAuth();
@@ -23,6 +23,11 @@ const PostRoute = () => {
     vehicleType: currentUser?.role === "driver" ? (currentUser as any).vehicleType || "" : ""
   });
   const [isLoading, setIsLoading] = useState(false);
+  
+  const driver = currentUser?.role === "driver" ? currentUser : null;
+  const initials = driver?.name 
+    ? driver.name.split(" ").map((n: string) => n[0]).join("")
+    : "";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -108,6 +113,20 @@ const PostRoute = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Display Driver Info if logged in */}
+          {isAuthenticated && driver && (
+            <div className="flex items-center mb-6 p-4 bg-muted/30 rounded-lg">
+              <Avatar className="h-12 w-12 mr-4">
+                <AvatarImage src={(driver as any).driverPhoto} alt={driver.name} />
+                <AvatarFallback>{initials}</AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="font-medium">{driver.name}</p>
+                <p className="text-sm text-muted-foreground">Posting as verified driver</p>
+              </div>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
