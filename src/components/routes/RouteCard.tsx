@@ -6,6 +6,7 @@ import { ArrowRight, TruckIcon, CalendarIcon } from "lucide-react";
 import { Route } from "@/lib/types";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { getDriverImage } from "@/lib/imageUtils";
 
 interface RouteCardProps {
   route: Route;
@@ -20,13 +21,16 @@ const RouteCard = ({ route }: RouteCardProps) => {
     .split(" ")
     .map((n) => n[0])
     .join("") || "";
+    
+  // Get driver image based on driver ID for consistency
+  const driverPhotoUrl = driver?.driverPhoto || (driver?.id ? getDriverImage(driver.id) : "");
 
   return (
     <Card className="card-hover border border-border bg-card mb-4">
       <CardHeader className="pb-2 flex flex-col sm:flex-row justify-between">
         <div className="flex items-center">
           <Avatar className="h-10 w-10 mr-4">
-            <AvatarImage src={(driver as any)?.driverPhoto} alt={driver?.name} />
+            <AvatarImage src={driverPhotoUrl} alt={driver?.name} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
           <div>

@@ -1,10 +1,10 @@
-
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BadgeCheck, Phone, Mail, TruckIcon } from "lucide-react";
 import { Driver } from "@/lib/types";
 import { Link } from "react-router-dom";
+import { getDriverImage, getTruckImage } from "@/lib/imageUtils";
 
 interface DriverCardProps {
   driver: Driver;
@@ -15,13 +15,17 @@ const DriverCard = ({ driver }: DriverCardProps) => {
     .split(" ")
     .map((n) => n[0])
     .join("");
+    
+  // Get driver and truck images based on driver ID for consistency
+  const driverPhotoUrl = driver.driverPhoto || getDriverImage(driver.id);
+  const truckImageUrl = driver.truckImage || getTruckImage(driver.id);
 
   return (
     <Card className="card-hover border border-border bg-card mb-4">
       <CardHeader className="pb-2">
         <div className="flex items-center">
           <Avatar className="h-12 w-12 mr-4">
-            <AvatarImage src={driver.driverPhoto} alt={driver.name} />
+            <AvatarImage src={driverPhotoUrl} alt={driver.name} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
           <div>
@@ -39,20 +43,18 @@ const DriverCard = ({ driver }: DriverCardProps) => {
         </div>
       </CardHeader>
       <CardContent>
-        {driver.truckImage && (
-          <div className="mb-4 rounded-md overflow-hidden h-32">
-            <img 
-              src={driver.truckImage}
-              alt={`${driver.name}'s truck`}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.onerror = null;
-                target.src = 'https://placehold.co/600x300?text=No+Truck+Image';
-              }}
-            />
-          </div>
-        )}
+        <div className="mb-4 rounded-md overflow-hidden h-32">
+          <img 
+            src={truckImageUrl}
+            alt={`${driver.name}'s truck`}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.onerror = null;
+              target.src = 'https://placehold.co/600x300?text=No+Truck+Image';
+            }}
+          />
+        </div>
 
         <div className="grid grid-cols-2 gap-2 mb-4">
           <div>
